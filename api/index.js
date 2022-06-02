@@ -31,7 +31,7 @@ conn.sync({ force: false }).then(() => {
       );
       var apiCountries = apiCountriesResponse.data.map((e) => {
         return {
-          id: e.cca3,
+          id: e.id,
           name: e.name.common,
           image: e.flags[0],
           continent: e.continents[0],
@@ -41,8 +41,11 @@ conn.sync({ force: false }).then(() => {
           population: e.population,
         };
       });
-      await Country.bulkCreate(apiCountries);
-      console.log("creado");
+      try {
+        await Country.bulkCreate(apiCountries);
+      } catch (err) {
+        throw new Error(err.message);
+      }
     }
     console.log("%s listening at 3001"); // eslint-disable-line no-console
   });
